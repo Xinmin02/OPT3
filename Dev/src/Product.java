@@ -24,8 +24,11 @@ public abstract class Product {
     public void setOpVoorraad(boolean opVoorraad) {
         this.opVoorraad = opVoorraad;
     }
+    public void setBeschrijving(String beschrijving) {this.beschrijving = beschrijving;}
 
     public abstract String getDetails();
     public abstract double getPrice();
     public abstract double getInsurance();
+
+
 }
