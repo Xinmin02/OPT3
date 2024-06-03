@@ -14,7 +14,4 @@ public class Medewerker {
     public boolean inloggen(String wachtwoord) {
         return this.wachtwoord.equals(wachtwoord);
     }
-
-    public void uitloggen() {
-    }
 }
