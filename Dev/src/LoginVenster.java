@@ -5,6 +5,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class LoginVenster extends Application {
+
     private LoginHandler loginHandler;
 
     public LoginVenster() {
@@ -35,7 +36,9 @@ public class LoginVenster extends Application {
             Medewerker medewerker = loginHandler.verifieer(gebruikersnaam, wachtwoord);
             if (medewerker != null) {
                 loginHandler.verwerkLogin(medewerker);
-                MenuVenster menuVenster = new MenuVenster(medewerker);
+                // Maak een nieuwe ProductRepository
+                ProductRepository productRepository = new ProductRepository();
+                MenuVenster menuVenster = new MenuVenster(medewerker, productRepository);
                 menuVenster.start(new Stage());
                 primaryStage.close();
             } else {
