@@ -1,16 +1,21 @@
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class OverzichtVenster extends Application implements Observer {
-    private ProductCatalogus catalogus;
-    private ListView<String> listView;
+    private ProductRepository productRepository;
+    private ObservableList<Product> productenObservable;
 
-    public OverzichtVenster() {
-        this.catalogus = new ProductCatalogus(); // Voorbeeld
-        catalogus.addObserver(this);
+    public OverzichtVenster(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+        this.productRepository.addObserver(this);
+        this.productenObservable = FXCollections.observableArrayList(productRepository.getProducten());
     }
 
     @Override
@@ -18,26 +23,30 @@ public class OverzichtVenster extends Application implements Observer {
         primaryStage.setTitle("Overzicht");
 
         VBox vbox = new VBox();
-        listView = new ListView<>();
+        Label lblOverzicht = new Label("Overzicht van alle producten");
 
-        for (Product product : catalogus.getProducten()) {
-            listView.getItems().add(product.getBeschrijving() + " - " + (product.isOpVoorraad() ? "Op voorraad" : "Verhuurd"));
-        }
+        ListView<Product> listView = new ListView<>(productenObservable);
+        listView.setCellFactory(param -> new ListCell<Product>() {
+            @Override
+            protected void updateItem(Product item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null || item.getBeschrijving() == null) {
+                    setText(null);
+                } else {
+                    setText(item.getBeschrijving());
+                }
+            }
+        });
 
-        listView.setOnMouseClicked(event -> {
-            String selectedItem = listView.getSelectionModel().getSelectedItem();
-            Product selectedProduct = catalogus.getProducten().stream()
-                    .filter(p -> (p.getBeschrijving() + " - " + (p.isOpVoorraad() ? "Op voorraad" : "Verhuurd")).equals(selectedItem))
-                    .findFirst()
-                    .orElse(null);
-
-            if (selectedProduct != null) {
-                DetailVenster detailVenster = new DetailVenster(selectedProduct);
+        listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                DetailVenster detailVenster = new DetailVenster(newValue);
                 detailVenster.start(new Stage());
             }
         });
 
-        vbox.getChildren().add(listView);
+        vbox.getChildren().addAll(lblOverzicht, listView);
+
         Scene scene = new Scene(vbox, 300, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -45,9 +54,6 @@ public class OverzichtVenster extends Application implements Observer {
 
     @Override
     public void update() {
-        listView.getItems().clear();
-        for (Product product : catalogus.getProducten()) {
-            listView.getItems().add(product.getBeschrijving() + " - " + (product.isOpVoorraad() ? "Op voorraad" : "Verhuurd"));
-        }
+        productenObservable.setAll(productRepository.getProducten());
     }
 }

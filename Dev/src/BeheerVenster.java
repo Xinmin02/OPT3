@@ -1,16 +1,15 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class BeheerVenster extends Application implements Observer {
-    private ProductCatalogus catalogus;
-    private ListView<String> listView;
+public class BeheerVenster extends Application {
+    private Medewerker ingelogdeMedewerker;
 
-    public BeheerVenster() {
-        this.catalogus = new ProductCatalogus(); // Voorbeeld
-        catalogus.addObserver(this);
+    public BeheerVenster(Medewerker medewerker) {
+        this.ingelogdeMedewerker = medewerker;
     }
 
     @Override
@@ -18,36 +17,19 @@ public class BeheerVenster extends Application implements Observer {
         primaryStage.setTitle("Beheer");
 
         VBox vbox = new VBox();
-        listView = new ListView<>();
+        Label lblBeheer = new Label("Beheer van producten");
 
-        for (Product product : catalogus.getProducten()) {
-            listView.getItems().add(product.getBeschrijving());
-        }
+        Button btnToevoegen = new Button("Product Toevoegen");
 
-        listView.setOnMouseClicked(event -> {
-            String selectedItem = listView.getSelectionModel().getSelectedItem();
-            Product selectedProduct = catalogus.getProducten().stream()
-                    .filter(p -> p.getBeschrijving().equals(selectedItem))
-                    .findFirst()
-                    .orElse(null);
-
-            if (selectedProduct != null) {
-                ToevoegenVenster toevoegenVenster = new ToevoegenVenster(selectedProduct);
-                toevoegenVenster.start(new Stage());
-            }
+        btnToevoegen.setOnAction(e -> {
+            ToevoegenVenster toevoegenVenster = new ToevoegenVenster(ingelogdeMedewerker);
+            toevoegenVenster.start(new Stage());
         });
 
-        vbox.getChildren().add(listView);
-        Scene scene = new Scene(vbox, 300, 400);
+        vbox.getChildren().addAll(lblBeheer, btnToevoegen);
+
+        Scene scene = new Scene(vbox, 300, 200);
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
-
-    @Override
-    public void update() {
-        listView.getItems().clear();
-        for (Product product : catalogus.getProducten()) {
-            listView.getItems().add(product.getBeschrijving());
-        }
     }
 }
