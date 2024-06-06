@@ -7,9 +7,11 @@ import javafx.stage.Stage;
 
 public class BeheerVenster extends Application {
     private Medewerker ingelogdeMedewerker;
+    private ProductRepository productRepository; // Toegevoegd productRepository
 
-    public BeheerVenster(Medewerker medewerker) {
+    public BeheerVenster(Medewerker medewerker, ProductRepository productRepository) {
         this.ingelogdeMedewerker = medewerker;
+        this.productRepository = productRepository; // Toegevoegd productRepository
     }
 
     @Override
@@ -22,7 +24,7 @@ public class BeheerVenster extends Application {
         Button btnToevoegen = new Button("Product Toevoegen");
 
         btnToevoegen.setOnAction(e -> {
-            ToevoegenVenster toevoegenVenster = new ToevoegenVenster(ingelogdeMedewerker);
+            ToevoegenVenster toevoegenVenster = new ToevoegenVenster(productRepository);
             toevoegenVenster.start(new Stage());
         });
 

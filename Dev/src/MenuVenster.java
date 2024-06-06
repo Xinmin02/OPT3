@@ -1,4 +1,3 @@
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -7,10 +6,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class MenuVenster extends Application {
-    private Medewerker ingelogdeMedewerker;
+    private final Medewerker ingelogdeMedewerker;
+    private final ProductRepository productRepository;
 
-    public MenuVenster(Medewerker medewerker) {
+    public MenuVenster(Medewerker medewerker, ProductRepository productRepository) {
         this.ingelogdeMedewerker = medewerker;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -26,12 +27,12 @@ public class MenuVenster extends Application {
         vbox.getChildren().addAll(lblWelkom, btnOverzicht, btnBeheer, btnUitloggen);
 
         btnOverzicht.setOnAction(e -> {
-            OverzichtVenster overzichtVenster = new OverzichtVenster();
+            OverzichtVenster overzichtVenster = new OverzichtVenster(productRepository);
             overzichtVenster.start(new Stage());
         });
 
         btnBeheer.setOnAction(e -> {
-            BeheerVenster beheerVenster = new BeheerVenster();
+            BeheerVenster beheerVenster = new BeheerVenster(ingelogdeMedewerker, productRepository); // Hier voeg ik de productRepository toe
             beheerVenster.start(new Stage());
         });
 
