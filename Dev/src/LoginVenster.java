@@ -1,4 +1,3 @@
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -35,6 +34,7 @@ public class LoginVenster extends Application {
             String wachtwoord = txtWachtwoord.getText();
             Medewerker medewerker = loginHandler.verifieer(gebruikersnaam, wachtwoord);
             if (medewerker != null) {
+                loginHandler.verwerkLogin(medewerker);
                 MenuVenster menuVenster = new MenuVenster(medewerker);
                 menuVenster.start(new Stage());
                 primaryStage.close();
