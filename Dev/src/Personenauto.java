@@ -1,14 +1,15 @@
-
 public class Personenauto extends Product {
     private String merk;
     private int gewicht;
     private int motorinhoud;
+    private boolean verzekerd;
 
-    public Personenauto(String beschrijving, String merk, int gewicht, int motorinhoud) {
+    public Personenauto(String beschrijving, String merk, int gewicht, int motorinhoud, boolean verzekerd) {
         super(beschrijving);
         this.merk = merk;
         this.gewicht = gewicht;
         this.motorinhoud = motorinhoud;
+        this.verzekerd = verzekerd;
     }
 
     @Override
