@@ -1,11 +1,13 @@
 public class Boormachine extends Product {
     private String merk;
     private String type;
+    private boolean verzekerd;
 
-    public Boormachine(String beschrijving, String merk, String type) {
+    public Boormachine(String beschrijving, String merk, String type, boolean verzekerd) {
         super(beschrijving);
         this.merk = merk;
         this.type = type;
+        this.verzekerd = verzekerd;
     }
 
     @Override
